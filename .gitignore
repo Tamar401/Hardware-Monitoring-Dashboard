@@ -1,0 +1,45 @@
+# ==================================
+# Visual Studio & .NET (AdhDashboard, AdhServer)
+# ==================================
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user
+*.suo
+*.dbmdl
+*.sln.docstates
+appsettings.Development.json
+
+# ==================================
+# STM32CubeIDE & C/C++ (projectCL)
+# ==================================
+Debug/
+Release/
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+*.log
+.mxproject
+
+# ==================================
+# VS Code & Environment
+# ==================================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# ==================================
+# OS Generated Files
+# ==================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
