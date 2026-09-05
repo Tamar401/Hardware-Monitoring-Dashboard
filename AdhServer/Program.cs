@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO.Ports;
 using System.Net;
 using System.Net.Sockets;
@@ -9,28 +9,31 @@ class Program
 {
     static async Task Main()
     {
-        Console.WriteLine("AdhServer started. Waiting for Dashboard on port 5000...");
-        TcpListener listener = new TcpListener(IPAddress.Any, 5000);
-        listener.Start();
-
-        using TcpClient client = await listener.AcceptTcpClientAsync();
-        Console.WriteLine("Dashboard connected! Streaming hardware data...");
-        using var networkStream = client.GetStream();
-
         using SerialPort serialPort = new SerialPort("COM3", 115200);
         serialPort.Open();
 
-        while (true)
+        TcpListener listener = new TcpListener(IPAddress.Any, 5000);
+        listener.Start();
+        Console.WriteLine("AdhServer started. Waiting for Dashboard on port 5000...");
+
+        while (true) // לולאה חיצונית - מאפשרת חיבור מחדש של הדשבורד
         {
+            using TcpClient client = await listener.AcceptTcpClientAsync();
+            Console.WriteLine("Dashboard connected! Streaming hardware data...");
+
             try
             {
-                string data = serialPort.ReadLine() + "\n";
-                byte[] bytes = Encoding.UTF8.GetBytes(data);
-                await networkStream.WriteAsync(bytes, 0, bytes.Length);
+                using var networkStream = client.GetStream();
+                while (client.Connected)
+                {
+                    string data = serialPort.ReadLine() + "\n";
+                    byte[] bytes = Encoding.UTF8.GetBytes(data);
+                    await networkStream.WriteAsync(bytes, 0, bytes.Length);
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                // התעלמות משגיאות רגעיות
+                Console.WriteLine($"Dashboard disconnected: {ex.Message}. Waiting for reconnection...");
             }
         }
     }
