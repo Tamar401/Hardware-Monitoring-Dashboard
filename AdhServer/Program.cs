@@ -17,7 +17,6 @@ class Program
         Console.WriteLine("Dashboard connected! Streaming hardware data...");
         using var networkStream = client.GetStream();
 
-        // פתיחת חיבור החומרה (עדכני את הפורט בהתאם לבקר שלך)
         using SerialPort serialPort = new SerialPort("COM3", 115200);
         serialPort.Open();
 
